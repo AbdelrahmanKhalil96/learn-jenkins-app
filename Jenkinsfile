@@ -10,7 +10,7 @@ pipeline {
         stage('Initialize Docker Environment') {
             agent {
                 docker {
-                    image 'node:18-alpine'
+                    image 'node:18-alpine'  // Specify image for this stage
                     reuseNode true  // Reuse the node environment across stages
                 }
             }
@@ -25,7 +25,12 @@ pipeline {
         }
 
         stage('Build') {
-            agent { docker { image 'node:18-alpine' reuseNode true } }
+            agent {
+                docker {
+                    image 'node:18-alpine'  // Specify image for this stage
+                    reuseNode true  // Reuse the node environment across stages
+                }
+            }
             steps {
                 sh '''
                     npm ci
@@ -37,7 +42,12 @@ pipeline {
         stage('Tests') {
             parallel {
                 stage('Unit tests') {
-                    agent { docker { image 'node:18-alpine' reuseNode true } }
+                    agent {
+                        docker {
+                            image 'node:18-alpine'  // Specify image for this stage
+                            reuseNode true  // Reuse the node environment across stages
+                        }
+                    }
                     steps {
                         sh 'npm test'
                     }
@@ -49,7 +59,12 @@ pipeline {
                 }
 
                 stage('E2E') {
-                    agent { docker { image 'mcr.microsoft.com/playwright:v1.39.0-jammy' reuseNode true } }
+                    agent {
+                        docker {
+                            image 'mcr.microsoft.com/playwright:v1.39.0-jammy'  // Specify image for this stage
+                            reuseNode true  // Reuse the node environment across stages
+                        }
+                    }
                     steps {
                         sh '''
                             npm install serve
@@ -68,7 +83,12 @@ pipeline {
         }
 
         stage('Deploy') {
-            agent { docker { image 'node:18-alpine' reuseNode true } }
+            agent {
+                docker {
+                    image 'node:18-alpine'  // Specify image for this stage
+                    reuseNode true  // Reuse the node environment across stages
+                }
+            }
             steps {
                 sh '''
                     echo "Deploying to production. Site ID: $NETLIFY_SITE_ID"
